@@ -2,75 +2,21 @@ const express = require('express');
 const router = express.Router();
 const mysql = require('../mysql').pool;
 
+/*
+Inclui carteira 
+Altera Carteira 
+Deleta Carteira 
 
-
-exports.getAtualizaCarteira = (req, res, next) =>{
-
-
-    mysql.getConnection((error, conn) => {
-
-        if (error) { return res.status(500).send({ error: error }) } // valida o mysql
-        conn.query(
-
-            'SELECT * FROM carteira WHERE id_usuario = 1;',
-            (error, result, field) => {
-                conn.release();
-
-
-
-                if (error) {
-
-                    res.status(500).send({
-
-                        error: error,
-                        response: null
-
-                    });
-
-                }
-
-                const response = {
-
-                    quantidade: result.length,
-                    carteiras: result.map(cart => {
-
-                        return {
-
-                            id_carteira: cart.id_carteira,
-                            valor_base: cart.valor_base,
-                            id_moeda: cart.id_moeda,
-                            
-
-                        }
-
-
-                    })
-
-                }
-
-                return res.status(200).send(response)
-
-
-            }
-
-
-        )
-
-
-
-    });
-
-}
-
-exports.getProdutosId = (req, res, next) => {
+*/
+exports.getAtualizaCarteira = (req, res, next) => {
 
     mysql.getConnection((error, conn) => {
 
         if (error) { return res.status(500).send({ error: error }) } // valida o mysql
         conn.query(
 
-            'SELECT * FROM produtos WHERE id_produtos = ?;',
-            [req.params.idproduto],
+            'UPDATE carteira c SET ajuste = ((((SELECT valor_moeda FROM moedas m  WHERE m.sigla_moeda = c.sigla_moeda )*100)/c.valor_base)-100), valor_atual = ((ajuste/100)*valor)+valor WHERE id_usuario = ?;',
+            [req.params.id_usuario],
             (error, result, field) => {
                 conn.release();
 
@@ -89,7 +35,7 @@ exports.getProdutosId = (req, res, next) => {
 
                     return res.status(404).send({
 
-                        mensagem: "Não foi encontrado produto com este ID"
+                        mensagem: "Não foi encontrado usuario com este ID"
 
                     })
 
@@ -99,17 +45,14 @@ exports.getProdutosId = (req, res, next) => {
                 const response = {
 
                  
-                    produto: {
+                    response: {
 
-                        id_produto: result[0].id_produtos,
-                        nome: result[0].nome,
-                        preco: result[0].preco,
-                        request: {
+                       
 
-                            tipo: 'GET',
-                            descricao: 'Retorna todos os produtos',
-                            url: 'http://localhost:3000/produtos'
-                        }
+                    tipo: 'GET',
+                    mensagem: 'Carteira Atualizada com sucesso!'
+                   
+                        
                         
 
                     }
@@ -135,21 +78,15 @@ exports.getProdutosId = (req, res, next) => {
 }
 
 
-exports.postProdutos = (req, res, next) => {
-    const produto = {
-
-        nome: req.body.nome,
-        preco: req.body.preco
-
-    };
-
+exports.postIncluiCarteira = (req, res, next) => {
+  
     mysql.getConnection((error, conn) => {
 
         if (error) { return res.status(500).send({ error: error }) } // valida o mysql
         conn.query(
 
-            'INSERT INTO produtos (nome, preco) VALUES (?,?)',
-            [req.body.nome, req.body.preco],
+            'INSERT INTO carteira (valor, valor_atual, valor_base, sigla_moeda, id_usuario) VALUES (?,?,?,?,?)',
+            [req.body.valor, req.body.valor,req.body.valor_base, req.body.sigla, req.body.id_usuario],
             (error, result, field) => {
                 conn.release();
 
@@ -168,12 +105,11 @@ exports.postProdutos = (req, res, next) => {
 
                 const response = {
 
-                    mansagem: 'produto inserido com sucesso',
+                    mansagem: 'carteira inserida com sucesso',
                     produtoCriado: {
-                      
-                        id_produto: result.id_produtos,
-                        nome: req.body.nome,
-                        preco: req.body.preco,
+                        valor: result.valor,
+                        sigla: req.body.sigla,
+                        id_usuario: req.body.id_usuario,
                         request: {
 
                             tipo: 'POST',
@@ -186,10 +122,7 @@ exports.postProdutos = (req, res, next) => {
 
                 }
 
-                const ipCliente = (req.headers['x-forwarded-for'] || '').split(',')[0] 
-                || req.socket.remoteAddress;
     
-           logs(req.usuario,response, ipCliente);
            
                return res.status(201).send(response);
 
@@ -204,57 +137,38 @@ exports.postProdutos = (req, res, next) => {
 
 }
 
-exports.patchProdutos = (req, res, next) => {
-
+exports.postExcluiCarteira = (req, res, next) => {
+  
     mysql.getConnection((error, conn) => {
 
         if (error) { return res.status(500).send({ error: error }) } // valida o mysql
        
-        if(req.body.id_produto == undefined){
+        if(req.body.id_carteira == undefined){
 
             return res.status(404).send({
 
-                mensagem: "Campo 'id_produto' nao foi Atribuido"
+                mensagem: "Campo 'id_carteira' nao foi Atribuido"
 
             })
 
 
         }
 
-        if(req.body.nome == undefined){
+ 
 
-            return res.status(404).send({
-
-                mensagem: "Campo 'nome' nao foi Atribuido"
-
-            })
-
-
-        }
-
-        if(req.body.preco == undefined){
-
-            return res.status(404).send({
-
-                mensagem: "Campo 'preco' nao foi Atribuido"
-
-            })
-
-
-        }
      
         conn.query(
 
-            'UPDATE produtos SET nome = ?, preco = ? WHERE id_produtos = ?',
-            [req.body.nome, req.body.preco, req.body.id_produto],
+            'DELETE FROM carteira WHERE id_carteira = ?;',
+            [req.body.id_carteira],
             (error, result, field) => {
                 conn.release();
-       
+       console.log(result)
                 if(result.affectedRows == 0){
 
                     return res.status(404).send({
 
-                        mensagem: "Não foi encontrado produto com este IDww"
+                        mensagem: "Não foi encontrada carteira com este ID"
 
                     })
 
@@ -274,12 +188,91 @@ exports.patchProdutos = (req, res, next) => {
 
                 const response = {
 
-                    mansagem: 'Produto atualizado com sucesso',
-                    produtoAtualizado: {
+                    mansagem: 'Carteira Excluida com sucesso'
 
-                        id_produto: req.body.id_produtos,
-                        nome: req.body.nome,
-                        preco: req.body.preco,
+                }
+
+         
+    
+               return res.status(201).send(response);
+
+            }
+
+
+        );
+        
+    });
+
+
+}
+
+exports.patchAlteraCarteira = (req, res, next) => {
+
+    mysql.getConnection((error, conn) => {
+
+        if (error) { return res.status(500).send({ error: error }) } // valida o mysql
+       
+        if(req.body.id_carteira == undefined){
+
+            return res.status(404).send({
+
+                mensagem: "Campo 'id_carteira' nao foi Atribuido"
+
+            })
+
+
+        }
+
+ 
+
+        if(req.body.valor == undefined){
+
+            return res.status(404).send({
+
+                mensagem: "Campo 'valor' nao foi Atribuido"
+
+            })
+
+
+        }
+     
+        conn.query(
+
+            'UPDATE carteira SET valor = ?, valor_atual = ? WHERE id_carteira = ?',
+            [req.body.valor, req.body.valor,  req.body.id_carteira],
+            (error, result, field) => {
+                conn.release();
+       console.log(result)
+                if(result.affectedRows == 0){
+
+                    return res.status(404).send({
+
+                        mensagem: "Não foi encontrada carteira com este ID"
+
+                    })
+
+
+                }
+
+
+                if (error) {
+
+                   
+                    return res.status(500).send({
+                        error: error
+                   
+                    });
+
+                }
+
+                const response = {
+
+                    mansagem: 'Carteira atualizada com sucesso',
+                    Carteira: {
+
+                        valor: req.body.valor,
+                        sigla: req.body.sigla,
+                        id_usuario: req.body.id_usuario,
                         request: {
 
                             tipo: 'PATCH',
@@ -292,10 +285,8 @@ exports.patchProdutos = (req, res, next) => {
 
                 }
 
-                const ipCliente = (req.headers['x-forwarded-for'] || '').split(',')[0] 
-                || req.socket.remoteAddress;
+         
     
-           logs(req.usuario,response, ipCliente);
                return res.status(201).send(response);
 
             }
@@ -304,7 +295,4 @@ exports.patchProdutos = (req, res, next) => {
         );
         
     });
-
-
-
 }
