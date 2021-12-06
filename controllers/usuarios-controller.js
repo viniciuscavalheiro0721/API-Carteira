@@ -23,8 +23,8 @@ exports.postCadastro = (req, res, next) => {
 
                         conn.query(
                             'INSERT INTO usuarios (nome,password, email) VALUES (?,?,?)',
-                            [req.body.nome, req.body.password,req.body.email],
-                           // [req.body.nome, hash,req.body.email],
+                            //[req.body.nome, req.body.password,req.body.email],
+                          [req.body.nome, hash,req.body.email],
                             (error, results) => {
 
                                 if (error) { return res.status(500).send({ error: error }) }
@@ -55,7 +55,7 @@ exports.postCadastro = (req, res, next) => {
 
 }
 
-exports.postLogin = (req, res, next) => {
+exports.postGeraToken = (req, res, next) => {
 
     mysql.getConnection((error, conn) => {
 
@@ -82,7 +82,7 @@ exports.postLogin = (req, res, next) => {
                     expiresIn: "180d"
                 });
                 return res.status(200).send({
-                    message: 'Autenticado com sucesso',
+                    message: 'Token Gerado com sucesso',
                     token: token
                 });
 
@@ -102,6 +102,52 @@ exports.postLogin = (req, res, next) => {
 
     });
 
+
+
+}
+
+
+
+exports.postlogin = (req, res, next) => {
+
+    mysql.getConnection((error, conn) => {
+
+        if (error) { return res.status(500).send({ error: error }) } // valida o mysql
+        conn.query('SELECT * FROM usuarios WHERE nome = ?',
+            [req.body.nome],
+            (error, results) => {
+                conn.release();
+                if (error) { return res.status(500).send({ error: error }) }
+                if (results.length < 1) {
+                    return res.status(401).send({ mensagem: 'Falha na Autenticação' })
+                } 
+
+               if(bcrypt.compareSync(req.body.password, results[0].password)){
+
+        
+                return res.status(200).send({
+                    message: 'Autenticado com sucesso',
+                    response: true
+                });
+
+
+               }else{
+
+              return  res.status(401).send({
+                    mensagem: 'Falha na Autenticação',
+                    response: false
+                })
+
+               }
+
+                   
+
+
+            })
+
+
+
+    });
 
 
 }

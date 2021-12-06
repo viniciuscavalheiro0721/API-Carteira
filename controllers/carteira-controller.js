@@ -15,7 +15,7 @@ exports.getAtualizaCarteira = (req, res, next) => {
         if (error) { return res.status(500).send({ error: error }) } // valida o mysql
         conn.query(
 
-            'UPDATE carteira c SET ajuste = ((((SELECT valor_moeda FROM moedas m  WHERE m.sigla_moeda = c.sigla_moeda )*100)/c.valor_base)-100), valor_atual = ((ajuste/100)*valor)+valor WHERE id_usuario = ?;',
+            'UPDATE carteira c SET ajuste = ((((SELECT valor_moeda FROM moedas m  WHERE m.sigla_moeda = c.sigla_moeda )*100)/c.valor_moeda)-100), valor_atual = ((ajuste/100)*valor)+valor WHERE id_usuario = ?;',
             [req.params.id_usuario],
             (error, result, field) => {
                 conn.release();
@@ -85,8 +85,8 @@ exports.postIncluiCarteira = (req, res, next) => {
         if (error) { return res.status(500).send({ error: error }) } // valida o mysql
         conn.query(
 
-            'INSERT INTO carteira (valor, valor_atual, valor_base, sigla_moeda, id_usuario) VALUES (?,?,?,?,?)',
-            [req.body.valor, req.body.valor,req.body.valor_base, req.body.sigla, req.body.id_usuario],
+            'INSERT INTO carteira (valor, valor_atual, valor_moeda, sigla_moeda, id_usuario) VALUES (?,?,?,?,?)',
+            [req.body.valor, req.body.valor,req.body.valor_moeda, req.body.sigla, req.body.id_usuario],
             (error, result, field) => {
                 conn.release();
 
@@ -163,7 +163,7 @@ exports.postExcluiCarteira = (req, res, next) => {
             [req.body.id_carteira],
             (error, result, field) => {
                 conn.release();
-       console.log(result)
+       
                 if(result.affectedRows == 0){
 
                     return res.status(404).send({
@@ -242,7 +242,7 @@ exports.patchAlteraCarteira = (req, res, next) => {
             [req.body.valor, req.body.valor,  req.body.id_carteira],
             (error, result, field) => {
                 conn.release();
-       console.log(result)
+    
                 if(result.affectedRows == 0){
 
                     return res.status(404).send({

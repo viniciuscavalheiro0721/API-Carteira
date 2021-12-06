@@ -34,6 +34,7 @@ app.use('/usuario', rotaUsuarios);
 app.use('/carteira', rotaCarteira);
 app.use('/moedas', rotaMoedas);
 
+
 app.use((req, res, next) => {
 
     const erro = new Error('Rota nao encontrada :/');

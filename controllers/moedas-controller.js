@@ -49,7 +49,10 @@ exports.getAtualizaMoedas = (req, res, next) =>{
     
         });
     
-        return res.status(200).send("ok")
+        return res.status(200).send({
+            mensagem: 'Moedas Atualizadas com sucesso!',
+            response: true
+        })
 
     };
     func();
