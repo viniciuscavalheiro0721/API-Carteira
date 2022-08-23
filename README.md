@@ -14,3 +14,74 @@ npm install jsonwebtoken --save <br/>
 
 
 </p>
+
+
+<font color="red">## ATUALIZAÇAO 3.O: Tela Integra Mercadorias  
+
+FRAME 1 - TELA DE SELECAO MERCADORIAS
+ 
+
+- ALTERACOES SOLICITADAS
+[x] tasklist_1
+[x] tasklist1-2
+[ ] tasklistt_2
+ 
+
+- IMPLEMENTAÇÔES SOLICITADAS
+[x] tasklist_1
+ 
+
+- CORRECOES
+[x] Ajuste do apontamento do item quando faz selecao por EAN
+ 
+
+FRAME 2 - LISTA DE MERCADORIAS
+ 
+
+- ALTERACOES SOLICITADAS
+[x] tasklist_1
+[x] tasklist1-2
+[ ] tasklistt_2
+ 
+
+- IMPLEMENTAÇÔES SOLICITADAS
+[x] tasklist_1
+ 
+
+- CORRECOES
+[x] Ajuste do apontamento do item quando faz selecao por EAN
+ 
+
+FRAME 3 - DETALHES DA MECADORIA SELECIONADA
+ 
+
+- ALTERACOES SOLICITADAS
+[x] tasklist_1
+[x] tasklist1-2
+[ ] tasklistt_2
+ 
+
+- IMPLEMENTAÇÔES SOLICITADAS
+[x] tasklist_1
+ 
+
+- CORRECOES
+[x] Ajuste do apontamento do item quando faz selecao por EAN
+ 
+
+FRAME 4 - INfORMACOES LOJAS DA MERCADORIA SELECIONADA
+ 
+
+- ALTERACOES SOLICITADAS
+[x] tasklist_1
+[x] tasklist1-2
+[ ] tasklistt_2
+ 
+
+- IMPLEMENTAÇÔES SOLICITADAS
+[x] tasklist_1
+ 
+
+- CORRECOES
+[x] Ajuste do apontamento do item quando faz selecao por EAN
+ 
