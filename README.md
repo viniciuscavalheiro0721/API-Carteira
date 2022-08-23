@@ -18,7 +18,7 @@ npm install jsonwebtoken --save <br/>
 
 
 Criação	Resultado
-<font color=\"red\"> ATUALIZAÇAO 3.O: Tela Integra Mercadorias</font>  
+## ATUALIZAÇAO 3.O: Tela Integra Mercadorias!!
 
 FRAME 1 - TELA DE SELECAO MERCADORIAS
  
