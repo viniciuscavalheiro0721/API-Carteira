@@ -22,26 +22,26 @@ FRAME 1 - TELA DE SELECAO MERCADORIAS
  
 
 - ALTERACOES SOLICITADAS
-[x] tasklist_1
-[x] tasklist1-2
-[ ] tasklistt_2
+[x] tasklist_1 \n
+[x] tasklist1-2 \n
+[ ] tasklistt_2 \n
  
 
 - IMPLEMENTAÇÔES SOLICITADAS
-[x] tasklist_1
+[x] tasklist_1an
  
 
 - CORRECOES
-[x] Ajuste do apontamento do item quando faz selecao por EAN
+[x] Ajuste do apontamento do item quando faz selecao por EANan
  
 
 FRAME 2 - LISTA DE MERCADORIAS
  
 
 - ALTERACOES SOLICITADAS
-[x] tasklist_1
-[x] tasklist1-2
-[ ] tasklistt_2
+[x] tasklist_1 \n
+[x] tasklist1-2 \n
+[ ] tasklistt_2 \n
  
 
 - IMPLEMENTAÇÔES SOLICITADAS
