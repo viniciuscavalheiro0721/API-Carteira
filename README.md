@@ -18,7 +18,7 @@ npm install jsonwebtoken --save <br/>
 
 
 Criação	Resultado
-## ATUALIZAÇAO 3.O: Tela Integra Mercadorias!!
+## !!ATUALIZAÇAO 3.O: Tela Integra Mercadorias
 
 FRAME 1 - TELA DE SELECAO MERCADORIAS
  
